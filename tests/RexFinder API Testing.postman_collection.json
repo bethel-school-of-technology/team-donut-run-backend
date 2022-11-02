@@ -1,0 +1,32 @@
+{
+	"info": {
+		"_postman_id": "8003f9e9-6f84-4885-8bb2-f2827830b7dd",
+		"name": "RexFinder API Testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Google Places API",
+			"item": [
+				{
+					"name": "Get All Places",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "<enter URL here>",
+							"host": [
+								"<enter URL here>"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "My Places API",
+			"item": []
+		}
+	]
+}
