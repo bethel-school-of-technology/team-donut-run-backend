@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace rexfinder_api.Models;
 
-public class GooglePlaces
+public class GooglePlace
 {
     //I'm honestly not sure we need this but I wrote it justincase.  Also everything is a string till we get better information from the google places API.
 
