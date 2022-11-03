@@ -9,7 +9,7 @@ public class MyPlaces
     //these items are set by our app
     [JsonIgnore]
     public int MyPlaceId { get; set; }
-    public bool Visited { get; set; } 
+    public bool Visited { get; set; } = false;
 
     [Required]
     public int UserId { get; set; }
