@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace rexfinder_api.Models;
 
@@ -6,8 +7,9 @@ public class MyPlaces
 {
 
     //these items are set by our app
+    [JsonIgnore]
     public int MyPlaceId { get; set; }
-    public bool Visited { get; set; }
+    public bool Visited { get; set; } 
 
     [Required]
     public int UserId { get; set; }
@@ -17,7 +19,7 @@ public class MyPlaces
 
     //below items are a local copy of the data from the google places API, a local cache if you will.  We should pull the most current data from google places API but having a local cache helps for speed and if google places API doesn't respond
     [Required]
-    public string GooglePlacesId { get; set; }
+    public string GooglePlaceId { get; set; }
 
     public string PlaceImage { get; set; }
     public string PlaceName { get; set; }

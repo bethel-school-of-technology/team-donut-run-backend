@@ -1,10 +1,16 @@
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
 namespace rexfinder_api.Models;
 
 public class GooglePlaces
 {
     //I'm honestly not sure we need this but I wrote it justincase.  Also everything is a string till we get better information from the google places API.
-    public string PlaceId { get; set; }
-    public string Photos { get; set; }
+
+    [JsonIgnore]
+    [Required]
+    public string GooglePlaceId { get; set; }
+    public string PlacePhotos { get; set; }
     public string PlaceType { get; set; }
     public string PlaceName { get; set; }
     public string PlaceAddress { get; set; }
