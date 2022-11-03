@@ -14,4 +14,7 @@ public class User
 
     [JsonIgnore]
     public List<RefreshToken> RefreshTokens { get; set; }
+
+    public string Location { get; set; }
+    public string Email { get; set; }
 }
