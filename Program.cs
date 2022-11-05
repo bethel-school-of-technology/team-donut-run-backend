@@ -1,10 +1,13 @@
 ﻿using System.Text.Json.Serialization;
+using rexfinder_api.Migrations;
 using WebApi.Authorization;
 using WebApi.Entities;
 using WebApi.Helpers;
 using WebApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSqlite<MyPlaceDbContext>("Data Source=rexfinder_api.db");
 
 // add services to DI container
 {
