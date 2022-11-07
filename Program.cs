@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using rexfinder_api.Clients;
 using WebApi.Authorization;
 using WebApi.Entities;
 using WebApi.Helpers;
@@ -15,6 +16,14 @@ var builder = WebApplication.CreateBuilder(args);
     services.AddCors();
     services.AddControllers()
         .AddJsonOptions(x => x.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull);
+    
+    // builder.Services.AddSingleton<IGooglePlacesClient, PlacesClient>();
+
+    // builder.Services.AddHttpClient<IGooglePlacesClient, PlacesClient>(client => {
+    //     client.BaseAddress = new Uri("https://geocode.maps.co/search?");
+    // });
+
+    // builder.Services.AddHttpClient();
 
     // configure strongly typed settings object
     services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
@@ -25,6 +34,8 @@ var builder = WebApplication.CreateBuilder(args);
 }
 
 var app = builder.Build();
+
+// app.UseHttpsRedirection();
 
 // add hardcoded test user to db on startup
 using (var scope = app.Services.CreateScope())

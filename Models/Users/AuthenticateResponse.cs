@@ -24,3 +24,5 @@ public class AuthenticateResponse
         RefreshToken = refreshToken;
     }
 }
+
+// This defines the data that is RETURNED from the authentication request

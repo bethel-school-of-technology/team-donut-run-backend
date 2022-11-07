@@ -102,11 +102,13 @@ public class UserService : IUserService
         _context.SaveChanges();
     }
 
+    // GET / get ALL users
     public IEnumerable<User> GetAll()
     {
         return _context.Users;
     }
 
+    // GET / one user by id
     public User GetById(int id)
     {
         var user = _context.Users.Find(id);
