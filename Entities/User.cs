@@ -1,6 +1,7 @@
 namespace WebApi.Entities;
 
 using System.Text.Json.Serialization;
+using rexfinder_api.Models;
 
 public class User
 {
@@ -17,4 +18,6 @@ public class User
 
     public string Location { get; set; }
     public string Email { get; set; }
+
+    public List<MyPlace> MyPlaces { get; set; }
 }

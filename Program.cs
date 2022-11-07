@@ -7,7 +7,7 @@ using WebApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSqlite<MyPlaceDbContext>("Data Source=rexfinder_api.db");
+builder.Services.AddSqlite<MyPlacesDbContext>("Data Source=rexfinder.db");
 
 // add services to DI container
 {

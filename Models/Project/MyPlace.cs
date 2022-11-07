@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using WebApi.Entities;
 
 namespace rexfinder_api.Models;
 
@@ -12,6 +13,7 @@ public class MyPlace
     public bool Visited { get; set; }
 
     public int UserId { get; set; }
+    public User User { get; set; }
 
     [Required]
     public string CreatedOn { get; set; }
