@@ -1,5 +1,7 @@
-namespace WebApi.Authorization;
+/////////////// NOT USING IN V1 OF AUTH ////////////////////////////
 
-[AttributeUsage(AttributeTargets.Method)]
-public class AllowAnonymousAttribute : Attribute
-{ }
+// namespace WebApi.Authorization;
+
+// [AttributeUsage(AttributeTargets.Method)]
+// public class AllowAnonymousAttribute : Attribute
+// { }

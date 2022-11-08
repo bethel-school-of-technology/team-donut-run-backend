@@ -1,20 +1,23 @@
-namespace WebApi.Entities;
+/////////////// NOT USING IN V1 OF AUTH ////////////////////////////
 
-using System.Text.Json.Serialization;
 
-public class User
-{
-    public int Id { get; set; }
-    public string FirstName { get; set; }
-    public string LastName { get; set; }
-    public string Username { get; set; }
+// namespace WebApi.Entities;
 
-    [JsonIgnore]
-    public string PasswordHash { get; set; }
+// using System.Text.Json.Serialization;
 
-    [JsonIgnore]
-    public List<RefreshToken> RefreshTokens { get; set; }
+// public class User
+// {
+//     public int Id { get; set; }
+//     public string FirstName { get; set; }
+//     public string LastName { get; set; }
+//     public string Username { get; set; }
 
-    public string Location { get; set; }
-    public string Email { get; set; }
-}
+//     [JsonIgnore]
+//     public string PasswordHash { get; set; }
+
+//     [JsonIgnore]
+//     public List<RefreshToken> RefreshTokens { get; set; }
+
+//     public string Location { get; set; }
+//     public string Email { get; set; }
+// }

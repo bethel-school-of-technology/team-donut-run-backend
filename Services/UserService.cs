@@ -1,164 +1,167 @@
-namespace WebApi.Services;
+/////////////// NOT USING IN V1 OF AUTH ////////////////////////////
 
-using BCrypt.Net;
-using Microsoft.Extensions.Options;
-using WebApi.Entities;
-using WebApi.Helpers;
-using WebApi.Models.Users;
-using WebApi.Authorization;
 
-public interface IUserService
-{
-    AuthenticateResponse Authenticate(AuthenticateRequest model, string ipAddress);
-    AuthenticateResponse RefreshToken(string token, string ipAddress);
-    void RevokeToken(string token, string ipAddress);
-    IEnumerable<User> GetAll();
-    User GetById(int id);
-}
+// namespace WebApi.Services;
 
-public class UserService : IUserService
-{
-    private DataContext _context;
-    private IJwtUtils _jwtUtils;
-    private readonly AppSettings _appSettings;
+// using BCrypt.Net;
+// using Microsoft.Extensions.Options;
+// using WebApi.Entities;
+// using WebApi.Helpers;
+// using WebApi.Models.Users;
+// using WebApi.Authorization;
 
-    public UserService(
-        DataContext context,
-        IJwtUtils jwtUtils,
-        IOptions<AppSettings> appSettings)
-    {
-        _context = context;
-        _jwtUtils = jwtUtils;
-        _appSettings = appSettings.Value;
-    }
+// public interface IUserService
+// {
+//     AuthenticateResponse Authenticate(AuthenticateRequest model, string ipAddress);
+//     AuthenticateResponse RefreshToken(string token, string ipAddress);
+//     void RevokeToken(string token, string ipAddress);
+//     IEnumerable<User> GetAll();
+//     User GetById(int id);
+// }
 
-    public AuthenticateResponse Authenticate(AuthenticateRequest model, string ipAddress)
-    {
-        var user = _context.Users.SingleOrDefault(x => x.Username == model.Username);
+// public class UserService : IUserService
+// {
+//     private DataContext _context;
+//     private IJwtUtils _jwtUtils;
+//     private readonly AppSettings _appSettings;
 
-        // validate
-        if (user == null || !BCrypt.Verify(model.Password, user.PasswordHash))
-            throw new AppException("Username or password is incorrect");
+//     public UserService(
+//         DataContext context,
+//         IJwtUtils jwtUtils,
+//         IOptions<AppSettings> appSettings)
+//     {
+//         _context = context;
+//         _jwtUtils = jwtUtils;
+//         _appSettings = appSettings.Value;
+//     }
 
-        // authentication successful so generate jwt and refresh tokens
-        var jwtToken = _jwtUtils.GenerateJwtToken(user);
-        var refreshToken = _jwtUtils.GenerateRefreshToken(ipAddress);
-        user.RefreshTokens.Add(refreshToken);
+//     public AuthenticateResponse Authenticate(AuthenticateRequest model, string ipAddress)
+//     {
+//         var user = _context.Users.SingleOrDefault(x => x.Username == model.Username);
 
-        // remove old refresh tokens from user
-        removeOldRefreshTokens(user);
+//         // validate
+//         if (user == null || !BCrypt.Verify(model.Password, user.PasswordHash))
+//             throw new AppException("Username or password is incorrect");
 
-        // save changes to db
-        _context.Update(user);
-        _context.SaveChanges();
+//         // authentication successful so generate jwt and refresh tokens
+//         var jwtToken = _jwtUtils.GenerateJwtToken(user);
+//         var refreshToken = _jwtUtils.GenerateRefreshToken(ipAddress);
+//         user.RefreshTokens.Add(refreshToken);
 
-        return new AuthenticateResponse(user, jwtToken, refreshToken.Token);
-    }
+//         // remove old refresh tokens from user
+//         removeOldRefreshTokens(user);
 
-    public AuthenticateResponse RefreshToken(string token, string ipAddress)
-    {
-        var user = getUserByRefreshToken(token);
-        var refreshToken = user.RefreshTokens.Single(x => x.Token == token);
+//         // save changes to db
+//         _context.Update(user);
+//         _context.SaveChanges();
 
-        if (refreshToken.IsRevoked)
-        {
-            // revoke all descendant tokens in case this token has been compromised
-            revokeDescendantRefreshTokens(refreshToken, user, ipAddress, $"Attempted reuse of revoked ancestor token: {token}");
-            _context.Update(user);
-            _context.SaveChanges();
-        }
+//         return new AuthenticateResponse(user, jwtToken, refreshToken.Token);
+//     }
 
-        if (!refreshToken.IsActive)
-            throw new AppException("Invalid token");
+//     public AuthenticateResponse RefreshToken(string token, string ipAddress)
+//     {
+//         var user = getUserByRefreshToken(token);
+//         var refreshToken = user.RefreshTokens.Single(x => x.Token == token);
 
-        // replace old refresh token with a new one (rotate token)
-        var newRefreshToken = rotateRefreshToken(refreshToken, ipAddress);
-        user.RefreshTokens.Add(newRefreshToken);
+//         if (refreshToken.IsRevoked)
+//         {
+//             // revoke all descendant tokens in case this token has been compromised
+//             revokeDescendantRefreshTokens(refreshToken, user, ipAddress, $"Attempted reuse of revoked ancestor token: {token}");
+//             _context.Update(user);
+//             _context.SaveChanges();
+//         }
 
-        // remove old refresh tokens from user
-        removeOldRefreshTokens(user);
+//         if (!refreshToken.IsActive)
+//             throw new AppException("Invalid token");
 
-        // save changes to db
-        _context.Update(user);
-        _context.SaveChanges();
+//         // replace old refresh token with a new one (rotate token)
+//         var newRefreshToken = rotateRefreshToken(refreshToken, ipAddress);
+//         user.RefreshTokens.Add(newRefreshToken);
 
-        // generate new jwt
-        var jwtToken = _jwtUtils.GenerateJwtToken(user);
+//         // remove old refresh tokens from user
+//         removeOldRefreshTokens(user);
 
-        return new AuthenticateResponse(user, jwtToken, newRefreshToken.Token);
-    }
+//         // save changes to db
+//         _context.Update(user);
+//         _context.SaveChanges();
 
-    public void RevokeToken(string token, string ipAddress)
-    {
-        var user = getUserByRefreshToken(token);
-        var refreshToken = user.RefreshTokens.Single(x => x.Token == token);
+//         // generate new jwt
+//         var jwtToken = _jwtUtils.GenerateJwtToken(user);
 
-        if (!refreshToken.IsActive)
-            throw new AppException("Invalid token");
+//         return new AuthenticateResponse(user, jwtToken, newRefreshToken.Token);
+//     }
 
-        // revoke token and save
-        revokeRefreshToken(refreshToken, ipAddress, "Revoked without replacement");
-        _context.Update(user);
-        _context.SaveChanges();
-    }
+//     public void RevokeToken(string token, string ipAddress)
+//     {
+//         var user = getUserByRefreshToken(token);
+//         var refreshToken = user.RefreshTokens.Single(x => x.Token == token);
 
-    public IEnumerable<User> GetAll()
-    {
-        return _context.Users;
-    }
+//         if (!refreshToken.IsActive)
+//             throw new AppException("Invalid token");
 
-    public User GetById(int id)
-    {
-        var user = _context.Users.Find(id);
-        if (user == null) throw new KeyNotFoundException("User not found");
-        return user;
-    }
+//         // revoke token and save
+//         revokeRefreshToken(refreshToken, ipAddress, "Revoked without replacement");
+//         _context.Update(user);
+//         _context.SaveChanges();
+//     }
 
-    // helper methods
+//     public IEnumerable<User> GetAll()
+//     {
+//         return _context.Users;
+//     }
 
-    private User getUserByRefreshToken(string token)
-    {
-        var user = _context.Users.SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == token));
+//     public User GetById(int id)
+//     {
+//         var user = _context.Users.Find(id);
+//         if (user == null) throw new KeyNotFoundException("User not found");
+//         return user;
+//     }
 
-        if (user == null)
-            throw new AppException("Invalid token");
+//     // helper methods
 
-        return user;
-    }
+//     private User getUserByRefreshToken(string token)
+//     {
+//         var user = _context.Users.SingleOrDefault(u => u.RefreshTokens.Any(t => t.Token == token));
 
-    private RefreshToken rotateRefreshToken(RefreshToken refreshToken, string ipAddress)
-    {
-        var newRefreshToken = _jwtUtils.GenerateRefreshToken(ipAddress);
-        revokeRefreshToken(refreshToken, ipAddress, "Replaced by new token", newRefreshToken.Token);
-        return newRefreshToken;
-    }
+//         if (user == null)
+//             throw new AppException("Invalid token");
 
-    private void removeOldRefreshTokens(User user)
-    {
-        // remove old inactive refresh tokens from user based on TTL in app settings
-        user.RefreshTokens.RemoveAll(x => 
-            !x.IsActive && 
-            x.Created.AddDays(_appSettings.RefreshTokenTTL) <= DateTime.UtcNow);
-    }
+//         return user;
+//     }
 
-    private void revokeDescendantRefreshTokens(RefreshToken refreshToken, User user, string ipAddress, string reason)
-    {
-        // recursively traverse the refresh token chain and ensure all descendants are revoked
-        if(!string.IsNullOrEmpty(refreshToken.ReplacedByToken))
-        {
-            var childToken = user.RefreshTokens.SingleOrDefault(x => x.Token == refreshToken.ReplacedByToken);
-            if (childToken.IsActive)
-                revokeRefreshToken(childToken, ipAddress, reason);
-            else
-                revokeDescendantRefreshTokens(childToken, user, ipAddress, reason);
-        }
-    }
+//     private RefreshToken rotateRefreshToken(RefreshToken refreshToken, string ipAddress)
+//     {
+//         var newRefreshToken = _jwtUtils.GenerateRefreshToken(ipAddress);
+//         revokeRefreshToken(refreshToken, ipAddress, "Replaced by new token", newRefreshToken.Token);
+//         return newRefreshToken;
+//     }
 
-    private void revokeRefreshToken(RefreshToken token, string ipAddress, string reason = null, string replacedByToken = null)
-    {
-        token.Revoked = DateTime.UtcNow;
-        token.RevokedByIp = ipAddress;
-        token.ReasonRevoked = reason;
-        token.ReplacedByToken = replacedByToken;
-    }
-}
+//     private void removeOldRefreshTokens(User user)
+//     {
+//         // remove old inactive refresh tokens from user based on TTL in app settings
+//         user.RefreshTokens.RemoveAll(x => 
+//             !x.IsActive && 
+//             x.Created.AddDays(_appSettings.RefreshTokenTTL) <= DateTime.UtcNow);
+//     }
+
+//     private void revokeDescendantRefreshTokens(RefreshToken refreshToken, User user, string ipAddress, string reason)
+//     {
+//         // recursively traverse the refresh token chain and ensure all descendants are revoked
+//         if(!string.IsNullOrEmpty(refreshToken.ReplacedByToken))
+//         {
+//             var childToken = user.RefreshTokens.SingleOrDefault(x => x.Token == refreshToken.ReplacedByToken);
+//             if (childToken.IsActive)
+//                 revokeRefreshToken(childToken, ipAddress, reason);
+//             else
+//                 revokeDescendantRefreshTokens(childToken, user, ipAddress, reason);
+//         }
+//     }
+
+//     private void revokeRefreshToken(RefreshToken token, string ipAddress, string reason = null, string replacedByToken = null)
+//     {
+//         token.Revoked = DateTime.UtcNow;
+//         token.RevokedByIp = ipAddress;
+//         token.ReasonRevoked = reason;
+//         token.ReplacedByToken = replacedByToken;
+//     }
+// }

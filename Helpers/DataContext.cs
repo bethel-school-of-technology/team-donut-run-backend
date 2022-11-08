@@ -1,22 +1,25 @@
-namespace WebApi.Helpers;
+/////////////// NOT USING IN V1 OF AUTH ////////////////////////////
 
-using Microsoft.EntityFrameworkCore;
-using WebApi.Entities;
 
-public class DataContext : DbContext
-{
-    public DbSet<User> Users { get; set; }
+// namespace WebApi.Helpers;
 
-    private readonly IConfiguration Configuration;
+// using Microsoft.EntityFrameworkCore;
+// using WebApi.Entities;
 
-    public DataContext(IConfiguration configuration)
-    {
-        Configuration = configuration;
-    }
+// public class DataContext : DbContext
+// {
+//     public DbSet<User> Users { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder options)
-    {
-        // in memory database used for simplicity, change to a real db for production applications
-        options.UseInMemoryDatabase("TestDb");
-    }
-}
+//     private readonly IConfiguration Configuration;
+
+//     public DataContext(IConfiguration configuration)
+//     {
+//         Configuration = configuration;
+//     }
+
+//     protected override void OnConfiguring(DbContextOptionsBuilder options)
+//     {
+//         // in memory database used for simplicity, change to a real db for production applications
+//         options.UseInMemoryDatabase("TestDb");
+//     }
+// }

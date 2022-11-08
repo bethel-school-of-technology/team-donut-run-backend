@@ -1,6 +1,9 @@
-namespace WebApi.Models.Users;
+/////////////// NOT USING IN V1 OF AUTH ////////////////////////////
 
-public class RevokeTokenRequest
-{
-    public string Token { get; set; }
-}
+
+// namespace WebApi.Models.Users;
+
+// public class RevokeTokenRequest
+// {
+//     public string Token { get; set; }
+// }
