@@ -5,24 +5,21 @@ namespace rexfinder_api.Models;
 
 public class MyPlace
 {
-
     //these items are set by our app
     [JsonIgnore]
+    [Required]
     public int MyPlaceId { get; set; }
     public bool Visited { get; set; }
 
+    [Required]
     public int UserId { get; set; }
+
+    public UserV1? User { get; set; }
 
     [Required]
     public string CreatedOn { get; set; }
 
-    //below items are a local copy of the data from the google places API, a local cache if you will.  We should pull the most current data from google places API but having a local cache helps for speed and if google places API doesn't respond
+    //this is coming from the front end from the google places api
     [Required]
     public string GooglePlaceId { get; set; }
-
-    public string PlaceImage { get; set; }
-    public string PlaceName { get; set; }
-    public string City { get; set; }
-    public string State { get; set; }
-    public string StarRating { get; set; }
 }
