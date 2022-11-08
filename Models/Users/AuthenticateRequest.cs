@@ -1,12 +1,15 @@
-namespace WebApi.Models.Users;
+/////////////// NOT USING IN V1 OF AUTH ////////////////////////////
 
-using System.ComponentModel.DataAnnotations;
 
-public class AuthenticateRequest
-{
-    [Required]
-    public string Username { get; set; }
+// namespace WebApi.Models.Users;
 
-    [Required]
-    public string Password { get; set; }
-}
+// using System.ComponentModel.DataAnnotations;
+
+// public class AuthenticateRequest
+// {
+//     [Required]
+//     public string Username { get; set; }
+
+//     [Required]
+//     public string Password { get; set; }
+// }

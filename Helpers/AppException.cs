@@ -1,17 +1,20 @@
-namespace WebApi.Helpers;
+/////////////// NOT USING IN V1 OF AUTH ////////////////////////////
 
-using System.Globalization;
 
-// custom exception class for throwing application specific exceptions (e.g. for validation) 
-// that can be caught and handled within the application
-public class AppException : Exception
-{
-    public AppException() : base() {}
+// namespace WebApi.Helpers;
 
-    public AppException(string message) : base(message) { }
+// using System.Globalization;
 
-    public AppException(string message, params object[] args) 
-        : base(String.Format(CultureInfo.CurrentCulture, message, args))
-    {
-    }
-}
+// // custom exception class for throwing application specific exceptions (e.g. for validation) 
+// // that can be caught and handled within the application
+// public class AppException : Exception
+// {
+//     public AppException() : base() {}
+
+//     public AppException(string message) : base(message) { }
+
+//     public AppException(string message, params object[] args) 
+//         : base(String.Format(CultureInfo.CurrentCulture, message, args))
+//     {
+//     }
+// }

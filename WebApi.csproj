@@ -5,7 +5,7 @@
         <RootNamespace>rexfinder_api</RootNamespace>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="BCrypt.Net-Next" Version="4.0.2" />
+        <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.10" />

@@ -1,30 +1,33 @@
-namespace WebApi.Authorization;
+/////////////// NOT USING IN V1 OF AUTH ////////////////////////////
 
-using Microsoft.Extensions.Options;
-using WebApi.Helpers;
-using WebApi.Services;
 
-public class JwtMiddleware
-{
-    private readonly RequestDelegate _next;
-    private readonly AppSettings _appSettings;
+// namespace WebApi.Authorization;
 
-    public JwtMiddleware(RequestDelegate next, IOptions<AppSettings> appSettings)
-    {
-        _next = next;
-        _appSettings = appSettings.Value;
-    }
+// using Microsoft.Extensions.Options;
+// using WebApi.Helpers;
+// using WebApi.Services;
 
-    public async Task Invoke(HttpContext context, IUserService userService, IJwtUtils jwtUtils)
-    {
-        var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
-        var userId = jwtUtils.ValidateJwtToken(token);
-        if (userId != null)
-        {
-            // attach user to context on successful jwt validation
-            context.Items["User"] = userService.GetById(userId.Value);
-        }
+// public class JwtMiddleware
+// {
+//     private readonly RequestDelegate _next;
+//     private readonly AppSettings _appSettings;
 
-        await _next(context);
-    }
-}
+//     public JwtMiddleware(RequestDelegate next, IOptions<AppSettings> appSettings)
+//     {
+//         _next = next;
+//         _appSettings = appSettings.Value;
+//     }
+
+//     public async Task Invoke(HttpContext context, IUserService userService, IJwtUtils jwtUtils)
+//     {
+//         var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+//         var userId = jwtUtils.ValidateJwtToken(token);
+//         if (userId != null)
+//         {
+//             // attach user to context on successful jwt validation
+//             context.Items["User"] = userService.GetById(userId.Value);
+//         }
+
+//         await _next(context);
+//     }
+// }

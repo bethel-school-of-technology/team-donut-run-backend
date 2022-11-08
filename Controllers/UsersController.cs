@@ -1,94 +1,97 @@
-﻿namespace WebApi.Controllers;
+﻿/////////////// NOT USING IN V1 OF AUTH ////////////////////////////
 
-using Microsoft.AspNetCore.Mvc;
-using WebApi.Authorization;
-using WebApi.Models.Users;
-using WebApi.Services;
 
-[Authorize]
-[ApiController]
-[Route("[controller]")]
-public class UsersController : ControllerBase
-{
-    private IUserService _userService;
+// namespace WebApi.Controllers;
 
-    public UsersController(IUserService userService)
-    {
-        _userService = userService;
-    }
+// using Microsoft.AspNetCore.Mvc;
+// using WebApi.Authorization;
+// using WebApi.Models.Users;
+// using WebApi.Services;
 
-    [AllowAnonymous]
-    [HttpPost("authenticate")]
-    public IActionResult Authenticate(AuthenticateRequest model)
-    {
-        var response = _userService.Authenticate(model, ipAddress());
-        setTokenCookie(response.RefreshToken);
-        return Ok(response);
-    }
+// [Authorize]
+// [ApiController]
+// [Route("[controller]")]
+// public class UsersController : ControllerBase
+// {
+//     private IUserService _userService;
 
-    [AllowAnonymous]
-    [HttpPost("refresh-token")]
-    public IActionResult RefreshToken()
-    {
-        var refreshToken = Request.Cookies["refreshToken"];
-        var response = _userService.RefreshToken(refreshToken, ipAddress());
-        setTokenCookie(response.RefreshToken);
-        return Ok(response);
-    }
+//     public UsersController(IUserService userService)
+//     {
+//         _userService = userService;
+//     }
 
-    [HttpPost("revoke-token")]
-    public IActionResult RevokeToken(RevokeTokenRequest model)
-    {
-        // accept refresh token in request body or cookie
-        var token = model.Token ?? Request.Cookies["refreshToken"];
+//     [AllowAnonymous]
+//     [HttpPost("authenticate")]
+//     public IActionResult Authenticate(AuthenticateRequest model)
+//     {
+//         var response = _userService.Authenticate(model, ipAddress());
+//         setTokenCookie(response.RefreshToken);
+//         return Ok(response);
+//     }
 
-        if (string.IsNullOrEmpty(token))
-            return BadRequest(new { message = "Token is required" });
+//     [AllowAnonymous]
+//     [HttpPost("refresh-token")]
+//     public IActionResult RefreshToken()
+//     {
+//         var refreshToken = Request.Cookies["refreshToken"];
+//         var response = _userService.RefreshToken(refreshToken, ipAddress());
+//         setTokenCookie(response.RefreshToken);
+//         return Ok(response);
+//     }
 
-        _userService.RevokeToken(token, ipAddress());
-        return Ok(new { message = "Token revoked" });
-    }
+//     [HttpPost("revoke-token")]
+//     public IActionResult RevokeToken(RevokeTokenRequest model)
+//     {
+//         // accept refresh token in request body or cookie
+//         var token = model.Token ?? Request.Cookies["refreshToken"];
 
-    [HttpGet]
-    public IActionResult GetAll()
-    {
-        var users = _userService.GetAll();
-        return Ok(users);
-    }
+//         if (string.IsNullOrEmpty(token))
+//             return BadRequest(new { message = "Token is required" });
 
-    [HttpGet("{id}")]
-    public IActionResult GetById(int id)
-    {
-        var user = _userService.GetById(id);
-        return Ok(user);
-    }
+//         _userService.RevokeToken(token, ipAddress());
+//         return Ok(new { message = "Token revoked" });
+//     }
 
-    [HttpGet("{id}/refresh-tokens")]
-    public IActionResult GetRefreshTokens(int id)
-    {
-        var user = _userService.GetById(id);
-        return Ok(user.RefreshTokens);
-    }
+//     [HttpGet]
+//     public IActionResult GetAll()
+//     {
+//         var users = _userService.GetAll();
+//         return Ok(users);
+//     }
 
-    // helper methods
+//     [HttpGet("{id}")]
+//     public IActionResult GetById(int id)
+//     {
+//         var user = _userService.GetById(id);
+//         return Ok(user);
+//     }
 
-    private void setTokenCookie(string token)
-    {
-        // append cookie with refresh token to the http response
-        var cookieOptions = new CookieOptions
-        {
-            HttpOnly = true,
-            Expires = DateTime.UtcNow.AddDays(7)
-        };
-        Response.Cookies.Append("refreshToken", token, cookieOptions);
-    }
+//     [HttpGet("{id}/refresh-tokens")]
+//     public IActionResult GetRefreshTokens(int id)
+//     {
+//         var user = _userService.GetById(id);
+//         return Ok(user.RefreshTokens);
+//     }
 
-    private string ipAddress()
-    {
-        // get source ip address for the current request
-        if (Request.Headers.ContainsKey("X-Forwarded-For"))
-            return Request.Headers["X-Forwarded-For"];
-        else
-            return HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
-    }
-}
+//     // helper methods
+
+//     private void setTokenCookie(string token)
+//     {
+//         // append cookie with refresh token to the http response
+//         var cookieOptions = new CookieOptions
+//         {
+//             HttpOnly = true,
+//             Expires = DateTime.UtcNow.AddDays(7)
+//         };
+//         Response.Cookies.Append("refreshToken", token, cookieOptions);
+//     }
+
+//     private string ipAddress()
+//     {
+//         // get source ip address for the current request
+//         if (Request.Headers.ContainsKey("X-Forwarded-For"))
+//             return Request.Headers["X-Forwarded-For"];
+//         else
+//             return HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
+//     }
+// }
