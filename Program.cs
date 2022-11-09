@@ -1,4 +1,6 @@
 ﻿using System.Text.Json.Serialization;
+using rexfinder_api.Migrations;
+
 
 /////////////// NOT USING IN V1 OF AUTH ////////////////////////////
 // using WebApi.Authorization;
@@ -7,6 +9,9 @@
 // using WebApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSqlite<MyPlacesDbContext>("Data Source=rexfinder.db");
+
 
 // add services to DI container
 /////////////// NOT USING IN V1 OF AUTH ////////////////////////////
