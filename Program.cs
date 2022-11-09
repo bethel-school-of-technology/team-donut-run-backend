@@ -11,7 +11,7 @@ using rexfinder_api.Migrations;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSqlite<MyPlacesDbContext>("Data Source=rexfinder.db");
+builder.Services.AddSqlite<MyPlacesDbContext>("Data Source=DonutRunSqlDatabase.db");
 
 
 // add services to DI container
