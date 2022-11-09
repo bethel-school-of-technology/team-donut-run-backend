@@ -1,5 +1,10 @@
 ﻿using System.Text.Json.Serialization;
 using rexfinder_api.Migrations;
+using rexfinder_api.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.OpenApi.Models;
 
 
 
@@ -11,8 +16,67 @@ using rexfinder_api.Migrations;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// connecting Controllers
+builder.Services.AddControllers();
+
+builder.Services.AddEndpointsApiExplorer();
+
+// Adding Swagger to test if we want it
+builder.Services.AddSwaggerGen(c => {
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "l11_tokens", Version = "v1" });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
+        In = ParameterLocation.Header, 
+        Description = "Please insert JWT with Bearer into field",
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey 
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement {
+    { 
+        new OpenApiSecurityScheme 
+        { 
+        Reference = new OpenApiReference 
+        { 
+            Type = ReferenceType.SecurityScheme,
+            Id = "Bearer" 
+        } 
+        },
+        new string[] { } 
+        } 
+    });
+});
+
+
+// DI for SQL server and Migrations
 builder.Services.AddSqlite<MyPlacesDbContext>("Data Source=DonutRunSqlDatabase.db");
 
+// DI for Auth Service and JWT
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+// DI for all other Repositories
+
+// DI for JWT Authentication & Token builder
+var secretKey = builder.Configuration["TokenSecret"];
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(cfg =>
+{
+    cfg.RequireHttpsMetadata = true;
+    cfg.SaveToken = true;
+    cfg.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+    {
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+        ValidateAudience = false,
+        ValidateIssuer = false,
+        ValidateLifetime = false,
+        RequireExpirationTime = false,
+        ClockSkew = TimeSpan.Zero,
+        ValidateIssuerSigningKey = true
+    };
+}
+);
 
 // add services to DI container
 /////////////// NOT USING IN V1 OF AUTH ////////////////////////////
@@ -35,6 +99,13 @@ builder.Services.AddSqlite<MyPlacesDbContext>("Data Source=DonutRunSqlDatabase.d
 
 var app = builder.Build();
 
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 // add hardcoded test user to db on startup
 /////////////// NOT USING IN V1 OF AUTH ////////////////////////////
 // using (var scope = app.Services.CreateScope())
@@ -52,7 +123,7 @@ var app = builder.Build();
 // }
 
 // configure HTTP request pipeline
-{
+// {
     // global cors policy
     app.UseCors(x => x
         .SetIsOriginAllowed(origin => true)
@@ -68,7 +139,13 @@ var app = builder.Build();
     /////////////// NOT USING IN V1 OF AUTH ////////////////////////////
     // app.UseMiddleware<JwtMiddleware>();
 
-    app.MapControllers();
-}
+    app.UseHttpsRedirection();
 
-app.Run("http://localhost:4000");
+    app.UseAuthorization();
+
+    app.MapControllers();
+// }
+
+// app.Run("http://localhost:4000");
+
+app.Run();
