@@ -1,0 +1,50 @@
+using rexfinder_api.Migrations;
+using rexfinder_api.Models;
+using rexfinder_api.Repositories;
+
+public class MyPlaceRepository : IMyPlaceRepository
+{
+    private readonly MyPlacesDbContext _context;
+
+    public MyPlaceRepository(MyPlacesDbContext context)
+    {
+        _context = context;
+    }
+    public MyPlace CreateMyPlace(MyPlace newMyPlace)
+    {
+        _context.MyPlaces.Add(newMyPlace);
+        _context.SaveChanges();
+        return newMyPlace;
+    }
+
+    public void DeleteMyPlaceById(int myPlaceId)
+    {
+        var myPlace = _context.MyPlaces.Find(myPlaceId);
+        if (myPlace != null)
+        {
+            _context.MyPlaces.Remove(myPlace);
+            _context.SaveChanges();
+        }
+    }
+
+    public IEnumerable<MyPlace> GetAllMyPlacesByUserId(int userId)
+    {
+        return _context.MyPlaces.ToList();
+    }
+
+    public MyPlace GetMyPlaceById(int myPlaceId)
+    {
+        return _context.MyPlaces.SingleOrDefault(mp => mp.MyPlaceId == myPlaceId);
+
+    }
+
+    public MyPlace UpdateMyPlace(MyPlace updatedMyPlace)
+    {
+        var ogMyPlace = _context.MyPlaces.Find(updatedMyPlace.MyPlaceId);
+        if (ogMyPlace != null) {
+            ogMyPlace.Visited = updatedMyPlace.Visited;
+            _context.SaveChanges();
+        }
+        return ogMyPlace;
+    }
+}
