@@ -12,6 +12,7 @@ public class MyPlaceRepository : IMyPlaceRepository
     }
     public MyPlace CreateMyPlace(MyPlace newMyPlace)
     {
+        newMyPlace.CreatedOn = DateTime.Now.ToString();
         _context.MyPlaces.Add(newMyPlace);
         _context.SaveChanges();
         return newMyPlace;
@@ -29,7 +30,9 @@ public class MyPlaceRepository : IMyPlaceRepository
 
     public IEnumerable<MyPlace> GetAllMyPlacesByUserId(int userId)
     {
-        return _context.MyPlaces.ToList();
+        var placeList = _context.MyPlaces.Where(p => p.UserId == userId).ToList();
+        return placeList;
+
     }
 
     public MyPlace GetMyPlaceById(int myPlaceId)
