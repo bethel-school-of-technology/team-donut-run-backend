@@ -23,16 +23,15 @@ public class UserV1Service : IUserV1Service
     {
         return _context.Users.SingleOrDefault(c => c.UserId == userId);
     }
-    
+
     public UserV1 UpdateUser(UserV1 newUser)
     {
         var originalUser = _context!.Users.Find(newUser.UserId);
         if (originalUser != null)
         {
-            originalUser.UserId = newUser.UserId;
-            originalUser.Username = newUser.Username;
+            //Not sure if this is where we update Username and Password.
+            //Testing other fields first.
             originalUser.Email = newUser.Email;
-            originalUser.Password = newUser.Password;
             originalUser.FirstName = newUser.FirstName;
             originalUser.LastName = newUser.LastName;
             originalUser.Location = newUser.Location;
