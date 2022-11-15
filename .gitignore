@@ -40,3 +40,7 @@ typings
 # .NET compiled files
 bin
 obj
+
+# Added by Keith
+# sqlLite databases
+*.db

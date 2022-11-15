@@ -31,6 +31,7 @@ public class UserV1Service : IUserV1Service
         {
             //Not sure if this is where we update Username and Password.
             //Testing other fields first.
+            originalUser.Username = newUser.Username;
             originalUser.Email = newUser.Email;
             originalUser.FirstName = newUser.FirstName;
             originalUser.LastName = newUser.LastName;
