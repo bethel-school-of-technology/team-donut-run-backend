@@ -52,7 +52,8 @@ builder.Services.AddSqlite<MyPlacesDbContext>("Data Source=DonutRunSqlDatabase.d
 // DI for Auth Service and JWT
 builder.Services.AddScoped<IAuthService, AuthService>();
 
-// DI for all other Repositories
+// DI for My Place Repository
+builder.Services.AddScoped<IMyPlaceRepository, MyPlaceRepository>();
 
 // DI for JWT Authentication & Token builder
 var secretKey = builder.Configuration["TokenSecret"];
