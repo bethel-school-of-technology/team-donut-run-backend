@@ -32,8 +32,8 @@ public class UserV1Repository : IUserV1Repository
         if (originalUser != null)
         {
             // //Hash password if password is entered.
-            // if (!string.IsNullOrEmpty(newUser.Password))
-            // originalUser.Password = bcrypt.HashPassword(newUser.Password);
+            if (!string.IsNullOrEmpty(newUser.Password))
+            originalUser.Password = bcrypt.HashPassword(newUser.Password);
 
             originalUser.Username = newUser.Username;
             originalUser.Email = newUser.Email;

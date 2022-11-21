@@ -4,9 +4,9 @@ using System.Text.Json.Serialization;
 
 namespace rexfinder_api.Models;
 
-public class UserV1 
+public class UserV1
 {
-   [JsonIgnore] // may need to take this out if it gives any trouble?
+    [JsonIgnore] // may need to take this out if it gives any trouble?
     public int UserId { get; set; }
 
     [Required]
@@ -16,8 +16,7 @@ public class UserV1
     [Required]
     [EmailAddress]
     public string? Email { get; set; }
-
-    [JsonIgnore]
+    [Required]
     public string? Password { get; set; }
 
     public string? FirstName { get; set; }
@@ -29,7 +28,7 @@ public class UserV1
 
     // ADD IN V2??
     // public string? PhotoUrl { get; set; }
-    
+
     [JsonIgnore]
     public List<MyPlace>? MyPlaces { get; set; }
 
