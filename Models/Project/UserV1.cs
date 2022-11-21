@@ -17,7 +17,7 @@ public class UserV1
     [EmailAddress]
     public string? Email { get; set; }
 
-    [Required]
+    [JsonIgnore]
     public string? Password { get; set; }
 
     public string? FirstName { get; set; }

@@ -2,7 +2,7 @@ using rexfinder_api.Models;
 
 namespace rexfinder_api.Repositories;
 
-public interface IUserV1Service {
+public interface IUserV1Repository {
 
     IEnumerable<UserV1> GetAllUsers();
     UserV1 GetUserById(int userId);

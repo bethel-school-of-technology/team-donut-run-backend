@@ -1,14 +1,15 @@
 using rexfinder_api.Models;
 using rexfinder_api.Migrations;
+using bcrypt = BCrypt.Net.BCrypt;
 
 namespace rexfinder_api.Repositories;
 
-public class UserV1Service : IUserV1Service
+public class UserV1Repository : IUserV1Repository
 {
 
     private readonly MyPlacesDbContext _context;
 
-    public UserV1Service(MyPlacesDbContext context)
+    public UserV1Repository(MyPlacesDbContext context)
     {
         _context = context;
     }
@@ -27,10 +28,13 @@ public class UserV1Service : IUserV1Service
     public UserV1 UpdateUser(UserV1 newUser)
     {
         var originalUser = _context!.Users.Find(newUser.UserId);
+
         if (originalUser != null)
         {
-            //Not sure if this is where we update Username and Password.
-            //Testing other fields first.
+            // //Hash password if password is entered.
+            // if (!string.IsNullOrEmpty(newUser.Password))
+            // originalUser.Password = bcrypt.HashPassword(newUser.Password);
+
             originalUser.Username = newUser.Username;
             originalUser.Email = newUser.Email;
             originalUser.FirstName = newUser.FirstName;
