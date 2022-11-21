@@ -47,8 +47,7 @@ builder.Services.AddSwaggerGen(c => {
 
 
 // DI for SQL server and Migrations
-// builder.Services.AddSqlite<MyPlacesDbContext>("Data Source=DonutRunSqlDatabase.db");
-builder.Services.AddSqlite<MyPlacesDbContext>("Data Source=rexfinder.db");
+builder.Services.AddSqlite<MyPlacesDbContext>("Data Source=RexfinderDb.db");
 
 // DI for Auth Service and JWT
 builder.Services.AddScoped<IAuthService, AuthService>();

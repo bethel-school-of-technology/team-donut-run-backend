@@ -8,6 +8,7 @@ public class UserV1Repository : IUserV1Repository
 {
 
     private readonly MyPlacesDbContext _context;
+    
 
     public UserV1Repository(MyPlacesDbContext context)
     {
@@ -24,25 +25,57 @@ public class UserV1Repository : IUserV1Repository
     {
         return _context.Users.SingleOrDefault(c => c.UserId == userId);
     }
+    //Original UpdateUser method
+    // public UserV1 UpdateUser(UserV1 newUser)
+    // {
+    //     var originalUser = _context!.Users.Find(newUser.UserId);
 
-    public UserV1 UpdateUser(UserV1 newUser)
+    //     if (originalUser != null)
+    //     {
+    //         // //Hash password if password is entered.
+    //         if (!string.IsNullOrEmpty(newUser.Password))
+    //         originalUser.Password = bcrypt.HashPassword(newUser.Password);
+            
+            // originalUser.UserId = newUser.UserId;
+            // originalUser.Username = newUser.Username;
+            // originalUser.Email = newUser.Email;
+            // originalUser.FirstName = newUser.FirstName;
+            // originalUser.LastName = newUser.LastName;
+            // originalUser.Location = newUser.Location;
+            // originalUser.MyPlaces = newUser.MyPlaces;
+    //         _context.SaveChanges();
+    //     }
+    //     return originalUser;
+    // }
+
+    public void UpdateUser(int userId, UpdateRequest newUser)
     {
-        var originalUser = _context!.Users.Find(newUser.UserId);
+        var originalUser = GetUserById(userId);
+        //  var originalUser = _context!.Users.Find(newUser);
+        Console.WriteLine(originalUser);
 
-        if (originalUser != null)
-        {
-            // //Hash password if password is entered.
-            if (!string.IsNullOrEmpty(newUser.Password))
+        // validate (Not using in Version 1)
+        // if (model.Email != user.Email && _context.Users.Any(x => x.Email == model.Email))
+        //     throw new AppException("User with the email '" + model.Email + "' already exists");
+
+        // hash password if it was entered
+        if (!string.IsNullOrEmpty(newUser.Password))
             originalUser.Password = bcrypt.HashPassword(newUser.Password);
+
+        // copy model to user and save
+
+        //AutoMapper not used in version 1
+        // _mapper.Map(model, user);
 
             originalUser.Username = newUser.Username;
             originalUser.Email = newUser.Email;
             originalUser.FirstName = newUser.FirstName;
             originalUser.LastName = newUser.LastName;
             originalUser.Location = newUser.Location;
-            _context.SaveChanges();
-        }
-        return originalUser;
+
+        _context.Users.Update(originalUser);
+        _context.SaveChanges();
+
     }
     public void DeleteUserById(int userId)
     {

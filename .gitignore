@@ -41,6 +41,6 @@ typings
 bin
 obj
 
-# Added by Keith
-# sqlLite databases
-*.db
+# # Added by Keith
+# # sqlLite databases
+# *.db

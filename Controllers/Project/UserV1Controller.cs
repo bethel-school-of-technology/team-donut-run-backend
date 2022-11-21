@@ -63,13 +63,23 @@ public class UserV1Controller : ControllerBase
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPut]
     [Route("{userId:int}")]
-    public ActionResult<UserV1> UpdateUser(UserV1 user)
+    //orignal method
+    // public ActionResult<UserV1> UpdateUser(UserV1 user)
+    // {
+        // if (!ModelState.IsValid || user == null)
+        // {
+        //     return BadRequest();
+        // }
+    //     return Ok(_userRepository.UpdateUser(user));
+    // }
+    public IActionResult UpdateUser(int userId, UpdateRequest newUser)
     {
-        if (!ModelState.IsValid || user == null)
+        if (!ModelState.IsValid || newUser == null)
         {
             return BadRequest();
         }
-        return Ok(_userRepository.UpdateUser(user));
+        _userRepository.UpdateUser(userId, newUser);
+        return Ok(new { message = "User updated" });
     }
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
