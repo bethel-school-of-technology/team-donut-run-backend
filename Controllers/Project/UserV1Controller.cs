@@ -21,7 +21,7 @@ public class UserV1Controller : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<IEnumerable<object>> GetUsers()
+    public ActionResult<IEnumerable<UserV1>> GetUsers()
     {
         return Ok(_userRepository.GetAllUsers());
     }
@@ -38,23 +38,25 @@ public class UserV1Controller : ControllerBase
         return Ok(user);
     }
 
-[HttpGet]
+    [HttpGet]
     [Route("current")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public ActionResult<UserV1> GetCurrentUser()
     {
 
-        if (HttpContext.User == null) {
+        if (HttpContext.User == null)
+        {
             return Unauthorized();
         }
-        
+
         var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId");
-        
+
         var userId = Int32.Parse(userIdClaim.Value);
 
         var user = _userRepository.GetUserById(userId);
 
-        if (user == null) {
+        if (user == null)
+        {
             return Unauthorized();
         }
 
@@ -63,23 +65,34 @@ public class UserV1Controller : ControllerBase
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPut]
     [Route("{userId:int}")]
-    //orignal method
-    // public ActionResult<UserV1> UpdateUser(UserV1 user)
-    // {
-        // if (!ModelState.IsValid || user == null)
-        // {
-        //     return BadRequest();
-        // }
-    //     return Ok(_userRepository.UpdateUser(user));
-    // }
-    public IActionResult UpdateUser(int userId, UpdateRequest newUser)
+    public IActionResult UpdateUser(int userId, UpdateRequest editUser)
     {
-        if (!ModelState.IsValid || newUser == null)
+        if (HttpContext.User == null)
+        {
+            return Unauthorized("Unable to find user, returns null");
+        }
+
+        var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId");
+
+        var claimId = Int32.Parse(userIdClaim.Value);
+
+        if (!ModelState.IsValid || editUser == null)
         {
             return BadRequest();
         }
-        _userRepository.UpdateUser(userId, newUser);
-        return Ok(new { message = "User updated" });
+        if (HttpContext.User == null)
+        {
+            return Unauthorized("Unable to find user, returns null");
+        }
+        if (claimId == userId)
+        {
+            _userRepository.UpdateUser(userId, editUser);
+            return Ok(new { message = "User updated" });
+        }
+        else
+        {
+            return Unauthorized("Not current user, can't edit");
+        }
     }
 
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

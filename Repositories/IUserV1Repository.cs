@@ -7,6 +7,6 @@ public interface IUserV1Repository {
     IEnumerable<UserV1> GetAllUsers();
     UserV1 GetUserById(int userId);
     // UserV1 UpdateUser(UserV1 newUser);
-    void UpdateUser(int userId, UpdateRequest newUser);
+    void UpdateUser(int userId, UpdateRequest editUser);
     void DeleteUserById(int userId);
 }
