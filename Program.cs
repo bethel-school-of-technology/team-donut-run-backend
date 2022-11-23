@@ -52,18 +52,15 @@ builder.Services.AddSqlite<MyPlacesDbContext>("Data Source=RexfinderDb.db");
 // DI for Auth Service and JWT
 builder.Services.AddScoped<IAuthService, AuthService>();
 
-<<<<<<< HEAD
 // DI for My Place Repository
 builder.Services.AddScoped<IMyPlaceRepository, MyPlaceRepository>();
-=======
 // DI for all other Repositories
 builder.Services.AddScoped<IUserV1Repository, UserV1Repository>();
->>>>>>> master
 
 // DI for JWT Authentication & Token builder
 var secretKey = builder.Configuration["TokenSecret"];
-builder.Services.AddAuthentication(options =>
-{
+
+builder.Services.AddAuthentication(options => {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
@@ -81,8 +78,7 @@ builder.Services.AddAuthentication(options =>
         ClockSkew = TimeSpan.Zero,
         ValidateIssuerSigningKey = true
     };
-}
-);
+});
 
 // add services to DI container
 /////////////// NOT USING IN V1 OF AUTH ////////////////////////////

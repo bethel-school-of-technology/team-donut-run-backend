@@ -32,7 +32,6 @@ public class MyPlaceRepository : IMyPlaceRepository
     {
         var placeList = _context.MyPlaces.Where(p => p.UserId == userId).ToList();
         return placeList;
-
     }
 
     public MyPlace GetMyPlaceById(int myPlaceId)

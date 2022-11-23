@@ -1,5 +1,5 @@
-// using Microsoft.AspNetCore.Authentication.JwtBearer;
-// using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using rexfinder_api.Models;
 using rexfinder_api.Repositories;
@@ -20,11 +20,13 @@ public class MyPlaceController : ControllerBase
         _myPlaceRepository = repository;
     }
 
-    // [HttpGet]
-    // public ActionResult<IEnumerable<MyPlace>> GetAllMyPlaces()
-    // {
-    //     return Ok(_myPlaceRepository.GetAllMyPlaces());
-    // }
+    [HttpGet]
+    [Route("all/{userId:int}")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public ActionResult<IEnumerable<MyPlace>> GetAllMyPlacesByUserId(int userId)
+    {
+        return Ok(_myPlaceRepository.GetAllMyPlacesByUserId(userId));
+    }
 
     [HttpGet]
     [Route("{myPlaceId:int}")]
@@ -40,7 +42,7 @@ public class MyPlaceController : ControllerBase
     }
 
     [HttpPost]
-    // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public ActionResult<MyPlace> CreateMyPlace(MyPlace newMyPlace)
     {
         if (HttpContext.User == null)
@@ -48,10 +50,9 @@ public class MyPlaceController : ControllerBase
             return Unauthorized();
         }
 
-        // var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId");
-        // var userId = int.Parse(userIdClaim.Value);
-        // newMyPlace.UserId = userId;
-        var userId = 1;
+        var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId");
+        var userId = Int32.Parse(userIdClaim.Value);
+        newMyPlace.UserId = userId;
 
         if (userId == null)
         {
@@ -68,8 +69,8 @@ public class MyPlaceController : ControllerBase
     }
 
     [HttpPut]
-    [Route("{myPlaceId:int}")]
-    // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Route("edit/{myPlaceId:int}")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public ActionResult<MyPlace> UpdateMyPlace(MyPlace updatedMyPlace)
     {
         if (HttpContext.User == null)
@@ -77,9 +78,8 @@ public class MyPlaceController : ControllerBase
             return Unauthorized();
         }
 
-        // var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId");
-        // var userId = int.Parse(userIdClaim.Value);
-        var userId = 1;
+        var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId");
+        var userId = Int32.Parse(userIdClaim.Value);
 
         if (!ModelState.IsValid || updatedMyPlace == null)
         {
@@ -98,7 +98,7 @@ public class MyPlaceController : ControllerBase
 
     [HttpDelete]
     [Route("{myPlaceId:int}")]
-    // [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public ActionResult DeleteMyPlace(int myPlaceId)
     {
         if (HttpContext.User == null)
@@ -106,9 +106,8 @@ public class MyPlaceController : ControllerBase
             return Unauthorized();
         }
 
-        // var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId");
-        // var userId = int.Parse(userIdClaim.Value);
-        var userId = 1;
+        var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId");
+        var userId = Int32.Parse(userIdClaim.Value);
         var myPlaceToDelete = _myPlaceRepository.GetMyPlaceById(myPlaceId);
 
         if (userId == null)
