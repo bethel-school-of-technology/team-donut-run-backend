@@ -51,6 +51,7 @@ public class UserV1Repository : IUserV1Repository
     public void UpdateUser(int userId, UpdateRequest editUser)
     {
         var originalUser = GetUserById(userId);
+        // I don't know if it's good to call another method within one?
        
         // validate (Not using in Version 1)
         // if (model.Email != user.Email && _context.Users.Any(x => x.Email == model.Email))
@@ -58,7 +59,10 @@ public class UserV1Repository : IUserV1Repository
 
         // hash password if it was entered
         if (!string.IsNullOrEmpty(editUser.Password))
+            // Where is the rest of the if statement {} code? 
+
             originalUser.Password = bcrypt.HashPassword(editUser.Password);
+            // I don't think we can do this because it sets the new password to be the actual hashed password (instead of what the user entered)
 
         // copy model to user and save
 
@@ -71,7 +75,7 @@ public class UserV1Repository : IUserV1Repository
             originalUser.LastName = editUser.LastName;
             originalUser.Location = editUser.Location;
 
-        _context.Users.Update(originalUser);
+        _context.Users.Update(originalUser); // What does this do?
         _context.SaveChanges();
 
     }

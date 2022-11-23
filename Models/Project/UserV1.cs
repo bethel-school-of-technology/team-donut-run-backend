@@ -6,7 +6,7 @@ namespace rexfinder_api.Models;
 
 public class UserV1
 {
-    [JsonIgnore] // may need to take this out if it gives any trouble?
+    // [JsonIgnore] // may need to take this out if it gives any trouble?
     public int UserId { get; set; }
 
     [Required]

@@ -9,12 +9,13 @@ namespace rexfinder_api.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 
-public class UserV1Controller : ControllerBase
+// I renamed this UserController from UserV1Controller since it wasn't working
+public class UserController : ControllerBase
 {
-    private readonly ILogger<UserV1Controller> _logger;
+    private readonly ILogger<UserController> _logger;
     private readonly IUserV1Repository _userRepository;
 
-    public UserV1Controller(ILogger<UserV1Controller> logger, IUserV1Repository repository)
+    public UserController(ILogger<UserController> logger, IUserV1Repository repository)
     {
         _logger = logger;
         _userRepository = repository;
@@ -64,7 +65,8 @@ public class UserV1Controller : ControllerBase
     }
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpPut]
-    [Route("{userId:int}")]
+    [Route("{userId:int}")] 
+    // I think this will cause problems on the front end since only signed in users can edit their profile -- this means we have to pass in the current userid to the route
     public IActionResult UpdateUser(int userId, UpdateRequest editUser)
     {
         if (HttpContext.User == null)
@@ -80,10 +82,14 @@ public class UserV1Controller : ControllerBase
         {
             return BadRequest();
         }
-        if (HttpContext.User == null)
-        {
-            return Unauthorized("Unable to find user, returns null");
-        }
+
+        // This is redundant code
+        // if (HttpContext.User == null)
+        // {
+        //     return Unauthorized("Unable to find user, returns null");
+        // }
+
+        // Is this the correct comparison?
         if (claimId == userId)
         {
             _userRepository.UpdateUser(userId, editUser);
@@ -95,6 +101,7 @@ public class UserV1Controller : ControllerBase
         }
     }
 
+    // This may not need auth since it's just for testing
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpDelete]
     [Route("{userId:int}")]

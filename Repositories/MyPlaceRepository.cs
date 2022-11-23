@@ -49,4 +49,19 @@ public class MyPlaceRepository : IMyPlaceRepository
         }
         return ogMyPlace;
     }
+
+    public MyPlace GetMyPlaceByUserIdGoogleId(int userId, string googlePlaceId)
+    {
+        var placeList = this.GetAllMyPlacesByUserId(userId);
+
+        // var placeList = _context.MyPlaces.Where(p => p.UserId == userId).ToList();
+
+        // var foundPlace = placeList.SingleOrDefault(pl => pl.GooglePlaceId == googlePlaceId);
+        // This returns an error if there is more than one value that meets the search, so we'll need to make sure each place can only be saved to each user once (unless we change to adding the values to a list but I don't think that's a good idea)
+
+         var foundPlace = placeList.FirstOrDefault(pl => pl.GooglePlaceId == googlePlaceId);
+         // This works to return the first occurrence of the place for that user
+
+        return foundPlace;
+    }
 }

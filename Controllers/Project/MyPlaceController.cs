@@ -20,16 +20,20 @@ public class MyPlaceController : ControllerBase
         _myPlaceRepository = repository;
     }
 
+    // GET / get all saved places for a user by user id
     [HttpGet]
     [Route("all/{userId:int}")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    // Right now this only matters that you're signed in NOT that you are signed and can only view your own places 
     public ActionResult<IEnumerable<MyPlace>> GetAllMyPlacesByUserId(int userId)
     {
         return Ok(_myPlaceRepository.GetAllMyPlacesByUserId(userId));
     }
 
+    // GET / a single my place by my place id
     [HttpGet]
     [Route("{myPlaceId:int}")]
+    // does this need auth or just for testing?
     public ActionResult<MyPlace> GetMyPlaceById(int myPlaceId)
     {
         var myPlace = _myPlaceRepository.GetMyPlaceById(myPlaceId);
@@ -41,6 +45,22 @@ public class MyPlaceController : ControllerBase
         return Ok(myPlace);
     }
 
+    // GET / a single my place by user id and google place id
+    [HttpGet]
+    [Route("find/{userId:int}/{googlePlaceId}")]
+    public ActionResult<MyPlace> GetMyPlaceByUserIdGooglePlaceId(int userId, string googlePlaceId)
+    {
+        var foundPlace = _myPlaceRepository.GetMyPlaceByUserIdGoogleId(userId, googlePlaceId);
+
+        if (foundPlace == null)
+        {
+            return NotFound("Saved place not found on current user");
+        }
+
+        return Ok(foundPlace);
+    }
+
+    // POST / create a new saved place
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public ActionResult<MyPlace> CreateMyPlace(MyPlace newMyPlace)
@@ -68,6 +88,7 @@ public class MyPlaceController : ControllerBase
         return Created(nameof(GetMyPlaceById), createdMyPlace);
     }
 
+    // PUT / update saved my place with visited boolean
     [HttpPut]
     [Route("edit/{myPlaceId:int}")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -96,6 +117,7 @@ public class MyPlaceController : ControllerBase
         }
     }
 
+    // DELETE / delete saved my place
     [HttpDelete]
     [Route("{myPlaceId:int}")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

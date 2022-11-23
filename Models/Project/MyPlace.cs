@@ -6,7 +6,7 @@ namespace rexfinder_api.Models;
 public class MyPlace
 {
     //these items are set by our app
-    [JsonIgnore]
+    // [JsonIgnore]
     [Required]
     public int MyPlaceId { get; set; }
     public bool Visited { get; set; }
