@@ -27,7 +27,36 @@ public class MyPlaceController : ControllerBase
     // Right now this only matters that you're signed in NOT that you are signed and can only view your own places 
     public ActionResult<IEnumerable<MyPlace>> GetAllMyPlacesByUserId(int userId)
     {
+        // Do we need to add code here that gets the current user and then automatically passes that in?
         return Ok(_myPlaceRepository.GetAllMyPlacesByUserId(userId));
+    }
+
+    // Do we need to add this? To automatically get all of the current user's My Places?
+    // GET / all current user's my places
+    [HttpGet]
+    [Route("user/current")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public ActionResult<IEnumerable<MyPlace>> GetCurrentUserMyPlaces(int userId)
+    {
+        if (HttpContext.User == null) {
+            return Unauthorized();
+        }
+        
+        var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId");
+        
+        userId = Int32.Parse(userIdClaim.Value);
+
+        if (userId == null) {
+            return Unauthorized();
+        }
+
+        var userMyPlaces = _myPlaceRepository.GetAllMyPlacesByUserId(userId);
+
+        if (userMyPlaces == null) {
+            return NotFound();
+        }
+        
+        return Ok(userMyPlaces);
     }
 
     // GET / a single my place by my place id
