@@ -9,7 +9,7 @@ namespace rexfinder_api.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 
-// I renamed this UserController from UserV1Controller since it wasn't working
+// I renamed this UserController from UserV1Controller
 public class UserController : ControllerBase
 {
     private readonly ILogger<UserController> _logger;
@@ -21,12 +21,14 @@ public class UserController : ControllerBase
         _userRepository = repository;
     }
 
+    // GET / get all users
     [HttpGet]
     public ActionResult<IEnumerable<UserV1>> GetUsers()
     {
         return Ok(_userRepository.GetAllUsers());
     }
 
+    // GET / get one user by user id
     [HttpGet]
     [Route("{userId:int}")]
     public ActionResult<UserV1> GetUserById(int userId)
@@ -39,6 +41,7 @@ public class UserController : ControllerBase
         return Ok(user);
     }
 
+    // GET / get current user
     [HttpGet]
     [Route("current")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -63,10 +66,11 @@ public class UserController : ControllerBase
 
         return Ok(user);
     }
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
+    // PUT / edit user by user id
     [HttpPut]
     [Route("{userId:int}")] 
-    // I think this will cause problems on the front end since only signed in users can edit their profile -- this means we have to pass in the current userid to the route
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public IActionResult UpdateUser(int userId, UpdateRequest editUser)
     {
         if (HttpContext.User == null)
@@ -101,7 +105,8 @@ public class UserController : ControllerBase
         }
     }
 
-    // This may not need auth since it's just for testing
+    // DELETE / user by user id
+    // This may not need auth since it's just for testing?
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpDelete]
     [Route("{userId:int}")]

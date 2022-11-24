@@ -25,6 +25,7 @@ public class UserV1Repository : IUserV1Repository
     {
         return _context.Users.SingleOrDefault(c => c.UserId == userId);
     }
+    
     //Original UpdateUser method
     // public UserV1 UpdateUser(UserV1 newUser)
     // {
@@ -61,7 +62,6 @@ public class UserV1Repository : IUserV1Repository
             // Where is the rest of the if statement {} code? 
 
             originalUser.Password = bcrypt.HashPassword(editUser.Password);
-            // I don't think we can do this because it sets the new password to be the actual hashed password (instead of what the user entered)
 
         // copy model to user and save
 
@@ -74,7 +74,7 @@ public class UserV1Repository : IUserV1Repository
             originalUser.LastName = editUser.LastName;
             originalUser.Location = editUser.Location;
 
-        _context.Users.Update(originalUser); // What does this do?
+        _context.Users.Update(originalUser);
         _context.SaveChanges();
 
     }

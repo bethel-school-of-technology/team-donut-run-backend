@@ -24,14 +24,11 @@ public class MyPlaceController : ControllerBase
     [HttpGet]
     [Route("all/{userId:int}")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    // Right now this only matters that you're signed in NOT that you are signed and can only view your own places 
     public ActionResult<IEnumerable<MyPlace>> GetAllMyPlacesByUserId(int userId)
     {
-        // Do we need to add code here that gets the current user and then automatically passes that in?
         return Ok(_myPlaceRepository.GetAllMyPlacesByUserId(userId));
     }
 
-    // Do we need to add this? To automatically get all of the current user's My Places?
     // GET / all current user's my places
     [HttpGet]
     [Route("user/current")]
@@ -62,10 +59,10 @@ public class MyPlaceController : ControllerBase
     // GET / a single my place by my place id
     [HttpGet]
     [Route("{myPlaceId:int}")]
-    // does this need auth or just for testing?
     public ActionResult<MyPlace> GetMyPlaceById(int myPlaceId)
     {
         var myPlace = _myPlaceRepository.GetMyPlaceById(myPlaceId);
+
         if (myPlace == null)
         {
             return NotFound();
@@ -76,9 +73,23 @@ public class MyPlaceController : ControllerBase
 
     // GET / a single my place by user id and google place id
     [HttpGet]
-    [Route("find/{userId:int}/{googlePlaceId}")]
+    // [Route("find/{userId:int}/{googlePlaceId}")]
+    [Route("find/current-user/{googlePlaceId}")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public ActionResult<MyPlace> GetMyPlaceByUserIdGooglePlaceId(int userId, string googlePlaceId)
     {
+        if (HttpContext.User == null) {
+            return Unauthorized();
+        }
+
+        var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId");
+        
+        userId = Int32.Parse(userIdClaim.Value);
+
+        if (userId == null) {
+            return Unauthorized();
+        }
+
         var foundPlace = _myPlaceRepository.GetMyPlaceByUserIdGoogleId(userId, googlePlaceId);
 
         if (foundPlace == null)
