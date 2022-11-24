@@ -20,6 +20,7 @@ public class MyPlaceController : ControllerBase
         _myPlaceRepository = repository;
     }
 
+    // GET / get all saved places for a user by user id
     [HttpGet]
     [Route("all/{userId:int}")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -28,11 +29,40 @@ public class MyPlaceController : ControllerBase
         return Ok(_myPlaceRepository.GetAllMyPlacesByUserId(userId));
     }
 
+    // GET / all current user's my places
+    [HttpGet]
+    [Route("user/current")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public ActionResult<IEnumerable<MyPlace>> GetCurrentUserMyPlaces(int userId)
+    {
+        if (HttpContext.User == null) {
+            return Unauthorized();
+        }
+        
+        var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId");
+        
+        userId = Int32.Parse(userIdClaim.Value);
+
+        if (userId == null) {
+            return Unauthorized();
+        }
+
+        var userMyPlaces = _myPlaceRepository.GetAllMyPlacesByUserId(userId);
+
+        if (userMyPlaces == null) {
+            return NotFound();
+        }
+        
+        return Ok(userMyPlaces);
+    }
+
+    // GET / a single my place by my place id
     [HttpGet]
     [Route("{myPlaceId:int}")]
     public ActionResult<MyPlace> GetMyPlaceById(int myPlaceId)
     {
         var myPlace = _myPlaceRepository.GetMyPlaceById(myPlaceId);
+
         if (myPlace == null)
         {
             return NotFound();
@@ -41,6 +71,36 @@ public class MyPlaceController : ControllerBase
         return Ok(myPlace);
     }
 
+    // GET / a single my place by user id and google place id
+    [HttpGet]
+    // [Route("find/{userId:int}/{googlePlaceId}")]
+    [Route("find/current-user/{googlePlaceId}")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public ActionResult<MyPlace> GetMyPlaceByUserIdGooglePlaceId(int userId, string googlePlaceId)
+    {
+        if (HttpContext.User == null) {
+            return Unauthorized();
+        }
+
+        var userIdClaim = HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId");
+        
+        userId = Int32.Parse(userIdClaim.Value);
+
+        if (userId == null) {
+            return Unauthorized();
+        }
+
+        var foundPlace = _myPlaceRepository.GetMyPlaceByUserIdGoogleId(userId, googlePlaceId);
+
+        if (foundPlace == null)
+        {
+            return NotFound("Saved place not found on current user");
+        }
+
+        return Ok(foundPlace);
+    }
+
+    // POST / create a new saved place
     [HttpPost]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public ActionResult<MyPlace> CreateMyPlace(MyPlace newMyPlace)
@@ -68,6 +128,7 @@ public class MyPlaceController : ControllerBase
         return Created(nameof(GetMyPlaceById), createdMyPlace);
     }
 
+    // PUT / update saved my place with visited boolean
     [HttpPut]
     [Route("edit/{myPlaceId:int}")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -96,6 +157,7 @@ public class MyPlaceController : ControllerBase
         }
     }
 
+    // DELETE / delete saved my place
     [HttpDelete]
     [Route("{myPlaceId:int}")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]

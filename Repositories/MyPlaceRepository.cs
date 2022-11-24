@@ -10,6 +10,8 @@ public class MyPlaceRepository : IMyPlaceRepository
     {
         _context = context;
     }
+
+    // POST / create new my place with current user id
     public MyPlace CreateMyPlace(MyPlace newMyPlace)
     {
         newMyPlace.CreatedOn = DateTime.Now.ToString();
@@ -18,6 +20,7 @@ public class MyPlaceRepository : IMyPlaceRepository
         return newMyPlace;
     }
 
+    // DELETE / delete my place by my place id
     public void DeleteMyPlaceById(int myPlaceId)
     {
         var myPlace = _context.MyPlaces.Find(myPlaceId);
@@ -28,18 +31,31 @@ public class MyPlaceRepository : IMyPlaceRepository
         }
     }
 
+    // GET / get all my places by user id
     public IEnumerable<MyPlace> GetAllMyPlacesByUserId(int userId)
     {
         var placeList = _context.MyPlaces.Where(p => p.UserId == userId).ToList();
         return placeList;
     }
 
+    // GET / get one my place by my place id
     public MyPlace GetMyPlaceById(int myPlaceId)
     {
         return _context.MyPlaces.SingleOrDefault(mp => mp.MyPlaceId == myPlaceId);
 
     }
 
+    // GET / get my place by user id and google place id (check if user has saved a place)
+    public MyPlace GetMyPlaceByUserIdGoogleId(int userId, string googlePlaceId)
+    {
+        var placeList = this.GetAllMyPlacesByUserId(userId);
+
+         var foundPlace = placeList.FirstOrDefault(pl => pl.GooglePlaceId == googlePlaceId);
+
+        return foundPlace;
+    }
+
+    // PUT / update my place by my place id
     public MyPlace UpdateMyPlace(MyPlace updatedMyPlace)
     {
         var ogMyPlace = _context.MyPlaces.Find(updatedMyPlace.MyPlaceId);
@@ -49,4 +65,5 @@ public class MyPlaceRepository : IMyPlaceRepository
         }
         return ogMyPlace;
     }
+
 }

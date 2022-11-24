@@ -9,23 +9,26 @@ namespace rexfinder_api.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 
-public class UserV1Controller : ControllerBase
+// I renamed this UserController from UserV1Controller
+public class UserController : ControllerBase
 {
-    private readonly ILogger<UserV1Controller> _logger;
+    private readonly ILogger<UserController> _logger;
     private readonly IUserV1Repository _userRepository;
 
-    public UserV1Controller(ILogger<UserV1Controller> logger, IUserV1Repository repository)
+    public UserController(ILogger<UserController> logger, IUserV1Repository repository)
     {
         _logger = logger;
         _userRepository = repository;
     }
 
+    // GET / get all users
     [HttpGet]
     public ActionResult<IEnumerable<UserV1>> GetUsers()
     {
         return Ok(_userRepository.GetAllUsers());
     }
 
+    // GET / get one user by user id
     [HttpGet]
     [Route("{userId:int}")]
     public ActionResult<UserV1> GetUserById(int userId)
@@ -38,6 +41,7 @@ public class UserV1Controller : ControllerBase
         return Ok(user);
     }
 
+    // GET / get current user
     [HttpGet]
     [Route("current")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -62,9 +66,11 @@ public class UserV1Controller : ControllerBase
 
         return Ok(user);
     }
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
+    // PUT / edit user by user id
     [HttpPut]
-    [Route("{userId:int}")]
+    [Route("{userId:int}")] 
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public IActionResult UpdateUser(int userId, UpdateRequest editUser)
     {
         if (HttpContext.User == null)
@@ -80,10 +86,14 @@ public class UserV1Controller : ControllerBase
         {
             return BadRequest();
         }
-        if (HttpContext.User == null)
-        {
-            return Unauthorized("Unable to find user, returns null");
-        }
+
+        // This is redundant code
+        // if (HttpContext.User == null)
+        // {
+        //     return Unauthorized("Unable to find user, returns null");
+        // }
+
+        // Is this the correct comparison?
         if (claimId == userId)
         {
             _userRepository.UpdateUser(userId, editUser);
@@ -95,6 +105,8 @@ public class UserV1Controller : ControllerBase
         }
     }
 
+    // DELETE / user by user id
+    // This may not need auth since it's just for testing?
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [HttpDelete]
     [Route("{userId:int}")]

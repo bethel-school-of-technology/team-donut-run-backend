@@ -25,6 +25,7 @@ public class UserV1Repository : IUserV1Repository
     {
         return _context.Users.SingleOrDefault(c => c.UserId == userId);
     }
+    
     //Original UpdateUser method
     // public UserV1 UpdateUser(UserV1 newUser)
     // {
@@ -58,6 +59,8 @@ public class UserV1Repository : IUserV1Repository
 
         // hash password if it was entered
         if (!string.IsNullOrEmpty(editUser.Password))
+            // Where is the rest of the if statement {} code? 
+
             originalUser.Password = bcrypt.HashPassword(editUser.Password);
 
         // copy model to user and save
