@@ -6,8 +6,6 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.OpenApi.Models;
 
-
-
 /////////////// NOT USING IN V1 OF AUTH ////////////////////////////
 // using WebApi.Authorization;
 // using WebApi.Entities;
@@ -52,10 +50,10 @@ builder.Services.AddSqlite<MyPlacesDbContext>("Data Source=RexfinderDb.db");
 // DI for Auth Service and JWT
 builder.Services.AddScoped<IAuthService, AuthService>();
 
-// DI for My Place Repository
-builder.Services.AddScoped<IMyPlaceRepository, MyPlaceRepository>();
 // DI for all other Repositories
 builder.Services.AddScoped<IUserV1Repository, UserV1Repository>();
+builder.Services.AddScoped<IMyPlaceRepository, MyPlaceRepository>();
+builder.Services.AddScoped<IDonutShopRepository, DonutShopRepository>();
 
 // DI for JWT Authentication & Token builder
 var secretKey = builder.Configuration["TokenSecret"];

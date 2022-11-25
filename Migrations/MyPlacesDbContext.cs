@@ -7,6 +7,7 @@ public class MyPlacesDbContext : DbContext
 {
     public DbSet<MyPlace> MyPlaces { get; set; }
     public DbSet<UserV1> Users { get; set; }
+    public DbSet<DonutShop> DonutShop { get; set; }
     public MyPlacesDbContext(DbContextOptions<MyPlacesDbContext> options)
         : base(options)
     {
@@ -40,6 +41,14 @@ public class MyPlacesDbContext : DbContext
            entity.Property(u => u.LastName);
            entity.Property(u => u.Location);
 
+       });
+
+       modelBuilder.Entity<DonutShop>(entity =>  
+       {
+        entity.HasKey(d => d.DonutShopId);
+        entity.Property(d => d.DonutShopName).IsRequired();
+        entity.Property(d => d.DonutShopAddress);
+        entity.Property(d => d.DonutShopWebsite);
        });
     }
 }
