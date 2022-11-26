@@ -9,4 +9,5 @@ public class DonutShop
     public string DonutShopName { get; set; }
     public string DonutShopAddress { get; set; }
     public string DonutShopWebsite { get; set; }
+    public string DonutShopImage { get; set; }
 }

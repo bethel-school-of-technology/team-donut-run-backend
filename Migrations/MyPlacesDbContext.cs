@@ -49,6 +49,7 @@ public class MyPlacesDbContext : DbContext
         entity.Property(d => d.DonutShopName).IsRequired();
         entity.Property(d => d.DonutShopAddress);
         entity.Property(d => d.DonutShopWebsite);
+        entity.Property(d => d.DonutShopImage);
        });
     }
 }
