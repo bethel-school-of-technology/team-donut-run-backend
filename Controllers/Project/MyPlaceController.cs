@@ -92,10 +92,10 @@ public class MyPlaceController : ControllerBase
 
         var foundPlace = _myPlaceRepository.GetMyPlaceByUserIdGoogleId(userId, googlePlaceId);
 
-        if (foundPlace == null)
-        {
-            return NotFound("Saved place not found on current user");
-        }
+        // if (foundPlace == null)
+        // {
+        //     return NotFound();
+        // }
 
         return Ok(foundPlace);
     }
