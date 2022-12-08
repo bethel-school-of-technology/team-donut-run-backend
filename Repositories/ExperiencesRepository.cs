@@ -33,9 +33,9 @@ public class ExperiencesRepository : IExperiencesRepository
     {
         var experienceList = this.GetAllExperiencesByUserId(userId);
 
-        var foundPlace = experienceList.FirstOrDefault(e => e.FirstGooglePlaceId == googlePlaceId);
+        var foundExperience = experienceList.FirstOrDefault(e => e.FirstGooglePlaceId == googlePlaceId);
 
-        return foundPlace;
+        return foundExperience;
     }
 
     public Experiences UpdateExperience(Experiences updatedExperience)
