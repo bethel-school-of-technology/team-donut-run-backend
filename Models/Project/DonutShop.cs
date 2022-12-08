@@ -8,6 +8,7 @@ public class DonutShop
     public int DonutShopId { get; set; }
     public string DonutShopName { get; set; }
     public string DonutShopAddress { get; set; }
+    public string DonutShopCityState { get; set; }
     public string DonutShopWebsite { get; set; }
-    public string DonutShopImage { get; set; }
+    public string DonutShopPhotoURL { get; set; }
 }

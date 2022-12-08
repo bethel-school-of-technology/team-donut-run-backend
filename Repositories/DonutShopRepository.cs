@@ -32,7 +32,8 @@ public class DonutShopRepository : IDonutShopRepository
             ogDonutShop.DonutShopAddress = updatedDonutShop.DonutShopAddress;
             ogDonutShop.DonutShopName = updatedDonutShop.DonutShopName;
             ogDonutShop.DonutShopWebsite = updatedDonutShop.DonutShopWebsite;
-            ogDonutShop.DonutShopImage = updatedDonutShop.DonutShopImage;
+            ogDonutShop.DonutShopCityState = updatedDonutShop.DonutShopCityState;
+            ogDonutShop.DonutShopPhotoURL = updatedDonutShop.DonutShopPhotoURL;
             _context.SaveChanges();
         }
         return ogDonutShop;
