@@ -71,7 +71,7 @@ public class UserController : ControllerBase
     [HttpPut]
     [Route("current/edit")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public ActionResult<UserV1> UpdateUser(int userId, UpdateRequest editUser)
+    public ActionResult UpdateUser(int userId, UpdateRequest editUser)
     {
         if (HttpContext.User == null)
         {
