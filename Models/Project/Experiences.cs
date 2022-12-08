@@ -16,6 +16,7 @@ public class Experiences
     public string ExperienceNotes { get; set; }
     public bool Completed { get; set; }
     public string ExperienceUserLocation { get; set; }
+    public string CreatedOn { get; set; }
 
     //this is coming from the front end from the google places api
     [Required]

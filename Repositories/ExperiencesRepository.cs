@@ -13,6 +13,7 @@ public class ExperiencesRepository : IExperiencesRepository
 
     public Experiences CreateExperience(Experiences newExperience)
     {
+        newExperience.CreatedOn = DateTime.Now.ToString();
         _context.Experiences.Add(newExperience);
         _context.SaveChanges();
         return newExperience;

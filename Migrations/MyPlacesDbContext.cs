@@ -76,6 +76,7 @@ public class MyPlacesDbContext : DbContext
             entity.Property(e => e.ExperienceNotes);
             entity.Property(e => e.Completed);
             entity.Property(e => e.ExperienceUserLocation);
+            entity.Property(e => e.CreatedOn);
             entity.Property(e => e.FirstGooglePlaceId).IsRequired();
             entity.Property(e => e.SecondGooglePlaceId);
             entity.Property(e => e.ThirdGooglePlaceId);
