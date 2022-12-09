@@ -54,6 +54,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserV1Repository, UserV1Repository>();
 builder.Services.AddScoped<IMyPlaceRepository, MyPlaceRepository>();
 builder.Services.AddScoped<IDonutShopRepository, DonutShopRepository>();
+builder.Services.AddScoped<IExperiencesRepository, ExperiencesRepository>();
 
 // DI for JWT Authentication & Token builder
 var secretKey = builder.Configuration["TokenSecret"];
