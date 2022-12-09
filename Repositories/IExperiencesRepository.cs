@@ -8,5 +8,6 @@ public interface IExperiencesRepository
     Experiences UpdateExperience(Experiences updatedExperience);
     void DeleteExperienceById(int experienceId);
     IEnumerable<Experiences> GetAllExperiencesByUserId(int userId);
+    IEnumerable<Experiences> GetAllExperiences();
     Experiences GetExperiencesByUserIdGoogleId(int userId, string googlePlaceId);
 }
