@@ -8,6 +8,5 @@ public interface IMyPlaceRepository
     MyPlace UpdateMyPlace(MyPlace updatedMyPlace);
     void DeleteMyPlaceById(int myPlaceId);
     IEnumerable<MyPlace> GetAllMyPlacesByUserId(int userId);
-
     MyPlace GetMyPlaceByUserIdGoogleId(int userId, string googlePlaceId);
 }

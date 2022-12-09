@@ -32,5 +32,8 @@ public class UserV1
     [JsonIgnore]
     public List<MyPlace>? MyPlaces { get; set; }
 
+    [JsonIgnore]
+    public List<Experiences> Experiences { get; set; }
+
 
 }

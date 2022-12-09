@@ -1,6 +1,5 @@
 using rexfinder_api.Models;
 using rexfinder_api.Migrations;
-using bcrypt = BCrypt.Net.BCrypt;
 
 namespace rexfinder_api.Repositories;
 
@@ -25,29 +24,6 @@ public class UserV1Repository : IUserV1Repository
     {
         return _context.Users.SingleOrDefault(c => c.UserId == userId);
     }
-    
-    //Original UpdateUser method
-    // public UserV1 UpdateUser(UserV1 newUser)
-    // {
-    //     var originalUser = _context!.Users.Find(newUser.UserId);
-
-    //     if (originalUser != null)
-    //     {
-    //         // //Hash password if password is entered.
-    //         if (!string.IsNullOrEmpty(newUser.Password))
-    //         originalUser.Password = bcrypt.HashPassword(newUser.Password);
-            
-            // originalUser.UserId = newUser.UserId;
-            // originalUser.Username = newUser.Username;
-            // originalUser.Email = newUser.Email;
-            // originalUser.FirstName = newUser.FirstName;
-            // originalUser.LastName = newUser.LastName;
-            // originalUser.Location = newUser.Location;
-            // originalUser.MyPlaces = newUser.MyPlaces;
-    //         _context.SaveChanges();
-    //     }
-    //     return originalUser;
-    // }
 
     public void UpdateUser(int userId, UpdateRequest editUser)
     {
