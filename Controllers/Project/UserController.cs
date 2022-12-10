@@ -69,9 +69,9 @@ public class UserController : ControllerBase
 
     // PUT / edit user by user id
     [HttpPut]
-    [Route("{userId:int}")] 
+    [Route("current/edit")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public IActionResult UpdateUser(int userId, UpdateRequest editUser)
+    public ActionResult UpdateUser(int userId, UpdateRequest editUser)
     {
         if (HttpContext.User == null)
         {
@@ -87,22 +87,14 @@ public class UserController : ControllerBase
             return BadRequest();
         }
 
-        // This is redundant code
-        // if (HttpContext.User == null)
-        // {
-        //     return Unauthorized("Unable to find user, returns null");
-        // }
+        _userRepository.UpdateUser(claimId, editUser);
+        // return Ok(new { message = "User updated" });
 
-        // Is this the correct comparison?
-        if (claimId == userId)
-        {
-            _userRepository.UpdateUser(userId, editUser);
-            return Ok(new { message = "User updated" });
-        }
-        else
-        {
-            return Unauthorized("Not current user, can't edit");
-        }
+
+        var user = _userRepository.GetUserById(claimId);
+
+        return Ok(user);
+
     }
 
     // DELETE / user by user id
