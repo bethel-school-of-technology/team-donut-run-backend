@@ -19,6 +19,11 @@ public class ExperiencesRepository : IExperiencesRepository
         return newExperience;
     }
 
+    public IEnumerable<Experiences> GetAllExperiences() {
+        return _context.Experiences.ToList();
+    }
+
+
     public IEnumerable<Experiences> GetAllExperiencesByUserId(int userId)
     {
         var experienceList = _context.Experiences.Where(e => e.UserId == userId).ToList();

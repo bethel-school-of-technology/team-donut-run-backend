@@ -21,6 +21,14 @@ public class ExperiencesController : ControllerBase
     }
 
     [HttpGet]
+    [Route("all")]
+    public ActionResult<IEnumerable<Experiences>> GetAllExperiences()
+    {
+        return Ok(_experiencesRepository.GetAllExperiences());
+    }
+
+
+    [HttpGet]
     [Route("all/{userId:int}")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public ActionResult<IEnumerable<Experiences>> GetAllExperiencesByUserId(int userId)
