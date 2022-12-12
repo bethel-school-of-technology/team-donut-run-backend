@@ -1,6 +1,7 @@
-﻿using System.Text.Json.Serialization;
+﻿// using System.Text.Json.Serialization;
 using rexfinder_api.Migrations;
 using rexfinder_api.Repositories;
+using rexfinder_api.Helpers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -55,6 +56,8 @@ builder.Services.AddScoped<IUserV1Repository, UserV1Repository>();
 builder.Services.AddScoped<IMyPlaceRepository, MyPlaceRepository>();
 builder.Services.AddScoped<IDonutShopRepository, DonutShopRepository>();
 builder.Services.AddScoped<IExperiencesRepository, ExperiencesRepository>();
+builder.Services.AddScoped<IForgotPasswordRepository,ForgotPasswordRepository>();
+builder.Services.AddScoped<IEmailRepository,EmailRepository>();
 
 // DI for JWT Authentication & Token builder
 var secretKey = builder.Configuration["TokenSecret"];
@@ -78,6 +81,9 @@ builder.Services.AddAuthentication(options => {
         ValidateIssuerSigningKey = true
     };
 });
+// configure strongly typed settings object
+    builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+
 
 // add services to DI container
 /////////////// NOT USING IN V1 OF AUTH ////////////////////////////

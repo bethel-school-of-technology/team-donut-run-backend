@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using rexfinder_api.Migrations;
 
@@ -10,9 +11,11 @@ using rexfinder_api.Migrations;
 namespace rexfinderapi.Migrations
 {
     [DbContext(typeof(MyPlacesDbContext))]
-    partial class MyPlacesDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221211082747_AddResetTokenToUserV1")]
+    partial class AddResetTokenToUserV1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
