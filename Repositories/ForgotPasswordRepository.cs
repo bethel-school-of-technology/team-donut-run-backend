@@ -60,6 +60,8 @@ public class ForgotPasswordRepository : IForgotPasswordRepository
         if (!string.IsNullOrEmpty(origin))
 
         {
+            //Had to add this ONE line to hard code the localhost port.
+            //Otherwise the origin is NULL in the Email.  Not sure why.
             origin = "http://localhost:8100";
             var resetUrl = $"{origin}/reset-password?token={user.ResetToken}";
             message = $@"<p>Please click the below link to reset your password, the link will be valid for 1 day:</p>
