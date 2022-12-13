@@ -40,6 +40,8 @@ public class MyPlacesDbContext : DbContext
            entity.Property(u => u.FirstName);
            entity.Property(u => u.LastName);
            entity.Property(u => u.Location);
+           entity.Property(u => u.ResetToken);
+           entity.Property(u => u.ResetTokenExpires);
        });
 
         modelBuilder.Entity<DonutShop>(entity =>

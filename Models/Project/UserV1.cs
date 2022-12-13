@@ -26,6 +26,10 @@ public class UserV1
     // What does this save? User input or default based on geolocation from the frontend?
     public string? Location { get; set; }
 
+    //Adding properties needed to reset password if forgotten
+    public string ResetToken { get; set; }
+    public DateTime? ResetTokenExpires { get; set; }
+
     // ADD IN V2??
     // public string? PhotoUrl { get; set; }
 
